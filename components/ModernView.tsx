@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { ChatMessage } from '../types';
 import { EXPERIENCES, PROJECTS, SKILLS, PERSONAL_INFO } from '../constants';
 import { sendMessageToGemini } from '../services/geminiService';
@@ -11,18 +11,9 @@ const ModernView: React.FC = () => {
     { role: 'model', text: `System Online. I am the portfolio assistant. Accessing data nodes... Ready for queries about ${PERSONAL_INFO.name}.`, timestamp: new Date() }
   ]);
   const [isTyping, setIsTyping] = useState(false);
-  const chatEndRef = useRef<HTMLDivElement>(null);
 
   // UI State
   const [copiedField, setCopiedField] = useState<string | null>(null);
-
-  const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   const handleSendMessage = async () => {
     if (!chatInput.trim()) return;
@@ -231,7 +222,6 @@ const ModernView: React.FC = () => {
                      </div>
                   </div>
                 )}
-                <div ref={chatEndRef} />
              </div>
 
              {/* Input Area */}
