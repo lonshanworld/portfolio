@@ -1,0 +1,5 @@
+{
+  "name": "DualPersona Portfolio",
+  "description": "A dual-view portfolio for a Senior Software Engineer that switches between a high-end modern aesthetic and a raw, retro 90s HTML style. Features a Gemini-powered AI assistant to answer questions about the engineer's experience.",
+  "requestFramePermissions": []
+}
