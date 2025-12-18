@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { EXPERIENCES, PROJECTS, SKILLS, PERSONAL_INFO } from '../constants';
+import GamePreview from './GamePreview';
+import SitePreview from './SitePreview';
 import { sendMessageToGemini } from '../services/geminiService';
 
 // Cast marquee to any to bypass TypeScript validation
@@ -23,33 +25,31 @@ const RetroView: React.FC = () => {
 
   const webProjects = PROJECTS.filter(p => p.category === 'web' || p.category === 'iot');
   const mobileProjects = PROJECTS.filter(p => p.category === 'mobile' || p.category === 'cross-platform');
+  const gameProjects = PROJECTS.filter(p => p.category === 'game' || p.category === 'html5');
 
   const ProjectList = ({ projects }: { projects: typeof PROJECTS }) => (
     <div className="space-y-8 mb-8">
-      {projects.map((p) => (
+      {projects.map((p, i) => (
         <fieldset key={p.id} className="border-2 border-black p-4 bg-[#f0f0f0] shadow-[4px_4px_0px_rgba(0,0,0,0.5)]">
-          <legend className="px-2 font-bold text-lg border-2 border-black bg-white shadow-[2px_2px_0px_#000]">
-            {p.title}
-          </legend>
-          
+          <legend className="px-2 font-bold text-lg border-2 border-black bg-white shadow-[2px_2px_0px_#000]">{p.title}</legend>
+
           <div className="flex flex-col gap-3">
-            <div className="font-mono text-sm bg-gray-200 border border-gray-400 p-1 inline-block self-start">
-              TYPE: {p.category.toUpperCase()}
-            </div>
-            
-            <p className="text-base font-serif leading-relaxed">
-              {p.description}
-            </p>
-            
-            <div>
-              <strong>Stack:</strong> {p.tech.join(", ")}
-            </div>
+            <div className="font-mono text-sm bg-gray-200 border border-gray-400 p-1 inline-block self-start">TYPE: {p.category.toUpperCase()}</div>
+
+            <p className="text-base font-serif leading-relaxed">{p.description}</p>
+
+            <div><strong>Stack:</strong> {p.tech.join(", ")}</div>
 
             <div className="mt-2 text-center">
-               <a href={p.link} target="_blank" rel="noreferrer" className="inline-block w-full md:w-auto bg-gray-300 border-2 border-outset border-white px-6 py-1 text-black font-bold active:border-inset active:bg-gray-400">
-                 [ ACCESS PROJECT ]
-               </a>
+               <a href={p.link} target="_blank" rel="noreferrer" className="inline-block w-full md:w-auto bg-gray-300 border-2 border-outset border-white px-6 py-1 text-black font-bold active:border-inset active:bg-gray-400">[ ACCESS PROJECT ]</a>
             </div>
+
+            {/* Inline preview for website / IoT projects */}
+            {(p.category === 'web' || p.category === 'iot') && (
+              <div className="mt-4 flex justify-center">
+                <SitePreview url={p.link} index={i} />
+              </div>
+            )}
           </div>
         </fieldset>
       ))}
@@ -183,10 +183,34 @@ const RetroView: React.FC = () => {
             <h2 className="text-2xl font-bold bg-blue-800 text-white px-3 py-2 mb-4 border-4 border-outset border-gray-400 shadow-md">4. Projects</h2>
             
             <div className="mb-8">
-                <h3 className="font-bold text-xl mb-4 border-b-2 border-black inline-block mt-2">4.1 Web Applications</h3>
+                {gameProjects.length > 0 && (
+                  <>
+                    <h3 className="font-bold text-xl mb-4 border-b-2 border-black inline-block">4.1 Games</h3>
+                    <div className="space-y-8 mb-8">
+                      {gameProjects.map((p, gi) => (
+                        <fieldset key={p.id} className="border-2 border-black p-4 bg-[#f0f0f0] shadow-[4px_4px_0px_rgba(0,0,0,0.5)]">
+                          <legend className="px-2 font-bold text-lg border-2 border-black bg-white shadow-[2px_2px_0px_#000]">{p.title}</legend>
+                          <div className="flex flex-col gap-3">
+                            <div className="font-mono text-sm bg-gray-200 border border-gray-400 p-1 inline-block self-start">TYPE: {p.category.toUpperCase()}</div>
+                            <p className="text-base font-serif leading-relaxed">{p.description}</p>
+                            <div><strong>Stack:</strong> {p.tech.join(", ")}</div>
+                            <div className="mt-2 text-center">
+                              <a href={p.link} target="_blank" rel="noreferrer" className="inline-block w-full md:w-auto bg-gray-300 border-2 border-outset border-white px-6 py-1 text-black font-bold active:border-inset active:bg-gray-400">[ ACCESS PROJECT ]</a>
+                            </div>
+                            <div className="mt-4 flex justify-center">
+                              <GamePreview url={p.link} index={gi} />
+                            </div>
+                          </div>
+                        </fieldset>
+                      ))}
+                    </div>
+                  </>
+                )}
+
+                <h3 className="font-bold text-xl mb-4 border-b-2 border-black inline-block mt-2">4.2 Web Applications</h3>
                 <ProjectList projects={webProjects} />
 
-                <h3 className="font-bold text-xl mb-4 border-b-2 border-black inline-block mt-4">4.2 Mobile Solutions</h3>
+                <h3 className="font-bold text-xl mb-4 border-b-2 border-black inline-block mt-4">4.3 Mobile Solutions</h3>
                 <ProjectList projects={mobileProjects} />
             </div>
 
@@ -197,6 +221,7 @@ const RetroView: React.FC = () => {
           <p>Best viewed with Netscape Navigator 4.0 or Internet Explorer 5.0</p>
           <p>Last Updated: {new Date().toLocaleDateString()}</p>
           <p>&copy; 1999 {PERSONAL_INFO.name}. All rights reserved.</p>
+          <p className="mt-2">Built with <a href="https://vitejs.dev" target="_blank" rel="noreferrer" className="retro-link">Vite</a></p>
         </div>
 
       </div>

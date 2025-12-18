@@ -16,7 +16,7 @@ export const EXPERIENCES: Experience[] = [
   {
     role: "Mid-level Mobile / Cross-Platform / Full-Stack Developer",
     company: "Singtecs Co., Ltd (Singapore) - Remote",
-    period: "January 2024 - November 2025",
+    period: "January 2024 - December 2025",
     description: "Built clinical mobile and web applications from scratch. Mastered multiple frameworks including Flutter, React Native, React, Next.js, Express.js, Node.js, and Nest.js. Implemented AI for chat and autoreply features and collaborated with cross-functional teams using Agile methodologies."
   },
   {
@@ -78,6 +78,16 @@ export const PROJECTS: Project[] = [
     category: "mobile",
     link: "https://apps.apple.com/us/app/quick-food-merchant/id6477524082",
     year: "2023"
+  }
+  ,
+  {
+    id: "6",
+    title: "Skyjump",
+    description: "A Solar2D (Lua) arcade jumper with dynamic weather (day, night, rainy, cloudy, sunny), energy balls for speed boosts, and 4 types of jump blocks.",
+    tech: ["Solar2D", "Lua", "Game"],
+    category: "game",
+    link: "https://skyjump.lonshan.com",
+    year: "2022"
   }
 ];
 

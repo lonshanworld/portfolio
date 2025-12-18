@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import GamePreview from './GamePreview';
+import SitePreview from './SitePreview';
 import { ChatMessage } from '../types';
 import { EXPERIENCES, PROJECTS, SKILLS, PERSONAL_INFO } from '../constants';
 import { sendMessageToGemini } from '../services/geminiService';
-import { ArrowUpRight, Github, Linkedin, Mail, Phone, MapPin, Copy, Check, Terminal, Send, Smartphone, Globe, Layers, Cpu, FileText, Activity, Zap, Wifi, Clock } from 'lucide-react';
+import { ArrowUpRight, Github, Linkedin, Mail, Phone, MapPin, Copy, Check, Terminal, Send, Smartphone, Globe, Layers, Cpu, FileText, Activity, Zap, Wifi, Clock, Eye } from 'lucide-react';
 
 const ModernView: React.FC = () => {
   // Chat State
@@ -42,6 +44,7 @@ const ModernView: React.FC = () => {
   // Filter Projects
   const webProjects = PROJECTS.filter(p => p.category === 'web' || p.category === 'iot');
   const mobileProjects = PROJECTS.filter(p => p.category === 'mobile' || p.category === 'cross-platform');
+  const gameProjects = PROJECTS.filter(p => p.category === 'game' || p.category === 'html5');
 
   const SocialRow = ({ icon: Icon, label, value, link, fieldId }: any) => (
     <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5 group/item">
@@ -66,16 +69,18 @@ const ModernView: React.FC = () => {
     </div>
   );
 
-  const ProjectCard = ({ project }: { project: typeof PROJECTS[0] }) => (
-    <a href={project.link} target="_blank" rel="noreferrer" className="group flex flex-col bg-[#0f0f0f] border border-white/10 rounded-2xl p-6 hover:border-cyan-500/30 transition-all hover:bg-white/[0.02] h-full">
+  // (No modal preview state — inline previews are used and lazy-loaded)
+
+  const ProjectCard: React.FC<{ project: typeof PROJECTS[0]; index?: number }> = ({ project, index = 0 }) => (
+    <div className="group flex flex-col bg-[#0f0f0f] border border-white/10 rounded-2xl p-6 hover:border-cyan-500/30 transition-all hover:bg-white/[0.02] h-full">
       <div className="flex justify-between items-start mb-6">
-        <div className={`p-2 rounded-lg ${project.category === 'mobile' ? 'bg-purple-500/10 text-purple-400' : 'bg-cyan-500/10 text-cyan-400'}`}>
-            {project.category === 'mobile' ? <Smartphone size={24} /> : <Globe size={24} />}
+        <div className={`p-2 rounded-lg ${project.category === 'mobile' ? 'bg-purple-500/10 text-purple-400' : project.category === 'game' ? 'bg-amber-500/10 text-amber-400' : 'bg-cyan-500/10 text-cyan-400'}`}>
+            {project.category === 'mobile' ? <Smartphone size={24} /> : project.category === 'game' ? <Activity size={24} /> : <Globe size={24} />}
         </div>
         <ArrowUpRight size={20} className="text-gray-600 group-hover:text-white transition-colors" />
       </div>
       <h3 className="text-xl font-bold text-gray-200 mb-3 group-hover:text-cyan-400 transition-colors">{project.title}</h3>
-      <p className="text-sm text-gray-400 mb-6 line-clamp-3 flex-1">{project.description}</p>
+      <p className="text-sm text-gray-400 mb-4 line-clamp-3 flex-1">{project.description}</p>
       <div className="flex flex-wrap gap-2 mt-auto">
         {project.tech.map(t => (
           <span key={t} className="text-[10px] uppercase font-bold tracking-wider text-gray-500 bg-white/5 px-2 py-1 rounded border border-white/5 group-hover:border-white/10">
@@ -83,7 +88,37 @@ const ModernView: React.FC = () => {
           </span>
         ))}
       </div>
-    </a>
+      <div className="mt-4 flex gap-3">
+        <button
+          onClick={() => window.open(project.link, '_blank', 'noopener')}
+          className="px-3 py-1 rounded bg-white/5 text-sm hover:bg-white/10 border border-white/5"
+        >
+          Open
+        </button>
+        {(project.category === 'web' || project.category === 'iot' || project.category === 'game') && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              const btn = e.currentTarget as HTMLElement;
+              const card = btn.closest('.group') as HTMLElement | null;
+              if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }}
+            className="px-3 py-1 rounded bg-cyan-500/10 text-sm text-cyan-400 hover:bg-cyan-500/20 border border-cyan-500/10 flex items-center gap-2"
+          >
+            <Eye size={14} /> Preview
+          </button>
+        )}
+      </div>
+
+      {/* Inline lazy preview for web/iot/game projects (auto-open but lazy-loaded) */}
+      {(project.category === 'web' || project.category === 'iot' || project.category === 'game') && (
+        project.category === 'game' ? (
+          <GamePreview url={project.link} index={index} />
+        ) : (
+          <SitePreview url={project.link} index={index} />
+        )
+      )}
+    </div>
   );
 
   return (
@@ -257,14 +292,28 @@ const ModernView: React.FC = () => {
                 <div className="h-px bg-white/10 flex-1 ml-4" />
             </div>
             
+            {/* Games Section (render first) */}
+            {gameProjects.length > 0 && (
+              <div className="mb-16">
+                <h3 className="text-xl font-bold text-gray-300 mb-6 flex items-center gap-2 pl-2">
+                    <Activity size={20} className="text-amber-400" /> Games
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                    {gameProjects.map((project, idx) => (
+                      <ProjectCard key={project.id} project={project} index={idx} />
+                    ))}
+                </div>
+              </div>
+            )}
+
             {/* Web Projects */}
             <div className="mb-16">
               <h3 className="text-xl font-bold text-gray-300 mb-6 flex items-center gap-2 pl-2">
                   <Globe size={20} className="text-cyan-400" /> Web Development
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {webProjects.map((project) => (
-                    <ProjectCard key={project.id} project={project} />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                  {webProjects.map((project, idx) => (
+                    <ProjectCard key={project.id} project={project} index={idx + gameProjects.length} />
                   ))}
               </div>
             </div>
@@ -274,9 +323,9 @@ const ModernView: React.FC = () => {
               <h3 className="text-xl font-bold text-gray-300 mb-6 flex items-center gap-2 pl-2">
                   <Smartphone size={20} className="text-purple-400" /> Mobile & Cross-Platform
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {mobileProjects.map((project) => (
-                    <ProjectCard key={project.id} project={project} />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                  {mobileProjects.map((project, idx) => (
+                    <ProjectCard key={project.id} project={project} index={idx + webProjects.length + gameProjects.length} />
                   ))}
               </div>
             </div>
@@ -309,6 +358,12 @@ const ModernView: React.FC = () => {
                 ))}
             </div>
         </section>
+
+        {/* Built with Vite Badge */}
+        <div className="mt-12 text-sm text-gray-400 flex items-center gap-2 justify-center">
+          <img src="https://vitejs.dev/logo.svg" alt="Vite" className="w-5 h-5" />
+          <span>Built with <a href="https://vitejs.dev" target="_blank" rel="noreferrer" className="text-cyan-400 hover:underline">Vite</a></span>
+        </div>
 
       </div>
     </div>
