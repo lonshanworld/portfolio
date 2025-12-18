@@ -127,6 +127,17 @@ const RetroView: React.FC = () => {
                 <p><b>Email:</b><br/><a href={`mailto:${PERSONAL_INFO.email}`} className="retro-link">{PERSONAL_INFO.email}</a></p>
                 <p><b>Loc:</b><br/>Bangkok, TH</p>
               </div>
+              <div className="mt-3">
+                <button
+                  onClick={() => {
+                    const url = 'https://drive.google.com/uc?export=download&id=1PVrbOFLAhq9TmPhe2m0cxcF-pRzqzl5h';
+                    window.open(url, '_blank', 'noopener,noreferrer');
+                  }}
+                  className="inline-block mt-2 px-4 py-2 bg-green-700 text-white font-bold rounded hover:bg-green-600"
+                >
+                  Download CV
+                </button>
+              </div>
             </div>
             
             {/* Links */}

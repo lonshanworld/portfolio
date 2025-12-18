@@ -6,6 +6,8 @@ import { EXPERIENCES, PROJECTS, SKILLS, PERSONAL_INFO } from '../constants';
 import { sendMessageToGemini } from '../services/geminiService';
 import { ArrowUpRight, Github, Linkedin, Mail, Phone, MapPin, Copy, Check, Terminal, Send, Smartphone, Globe, Layers, Cpu, FileText, Activity, Zap, Wifi, Clock, Eye } from 'lucide-react';
 
+const RESUME_DRIVE_FILE_ID = '1PVrbOFLAhq9TmPhe2m0cxcF-pRzqzl5h';
+
 const ModernView: React.FC = () => {
   // Chat State
   const [chatInput, setChatInput] = useState('');
@@ -188,6 +190,17 @@ const ModernView: React.FC = () => {
                   <SocialRow icon={Github} label="GitHub" value="github.com/lonshanworld" link={PERSONAL_INFO.github} fieldId="github" />
                   <SocialRow icon={Linkedin} label="LinkedIn" value="linkedin.com/in/lon-shan" link={PERSONAL_INFO.linkedin} fieldId="linkedin" />
                   <SocialRow icon={FileText} label="JobsDB" value="th.jobsdb.com/profile..." link={PERSONAL_INFO.jobsdb} fieldId="jobsdb" />
+                  {/* Download CV (Google Drive) */}
+                  <button
+                    onClick={() => {
+                      const url = `https://drive.google.com/uc?export=download&id=${RESUME_DRIVE_FILE_ID}`;
+                      window.open(url, '_blank', 'noopener,noreferrer');
+                    }}
+                    className="w-full mt-2 px-4 py-2 rounded-lg bg-cyan-500 text-black font-medium hover:bg-cyan-600 flex items-center justify-center gap-2"
+                  >
+                    <FileText size={16} />
+                    <span>Download CV</span>
+                  </button>
 
                   {/* Location */}
                   <div className="flex items-start gap-3 p-3 text-xs text-gray-500 mt-2">
