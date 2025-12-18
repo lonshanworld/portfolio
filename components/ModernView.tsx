@@ -6,7 +6,7 @@ import { EXPERIENCES, PROJECTS, SKILLS, PERSONAL_INFO } from '../constants';
 import { sendMessageToGemini } from '../services/geminiService';
 import { ArrowUpRight, Github, Linkedin, Mail, Phone, MapPin, Copy, Check, Terminal, Send, Smartphone, Globe, Layers, Cpu, FileText, Activity, Zap, Wifi, Clock, Eye } from 'lucide-react';
 
-const RESUME_DRIVE_FILE_ID = '1PVrbOFLAhq9TmPhe2m0cxcF-pRzqzl5h';
+const RESUME_DRIVE_FILE_ID = '1MinnW-bPAA3ww4S_kKJvFz3gUeFNYDX9';
 
 const ModernView: React.FC = () => {
   // Chat State
