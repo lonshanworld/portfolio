@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { EXPERIENCES, PROJECTS, SKILLS, PERSONAL_INFO } from '../constants';
 import GamePreview from './GamePreview';
 import SitePreview from './SitePreview';
+import ContactForm from './ContactForm';
 import { sendMessageToGemini } from '../services/geminiService';
 
 // Cast marquee to any to bypass TypeScript validation
@@ -226,6 +227,11 @@ const RetroView: React.FC = () => {
             </div>
 
           </div>
+        </div>
+
+        {/* Contact Form Section */}
+        <div className="mt-8">
+          <ContactForm variant="retro" />
         </div>
 
         <div className="text-center mt-12 text-sm text-gray-500 border-t border-gray-400 pt-4">

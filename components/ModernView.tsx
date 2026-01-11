@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import GamePreview from './GamePreview';
 import SitePreview from './SitePreview';
+import ContactForm from './ContactForm';
 import { ChatMessage } from '../types';
 import { EXPERIENCES, PROJECTS, SKILLS, PERSONAL_INFO } from '../constants';
 import { sendMessageToGemini } from '../services/geminiService';
@@ -371,6 +372,16 @@ const ModernView: React.FC = () => {
                 ))}
             </div>
         </section>
+
+        {/* CONTACT FORM SECTION */}
+        <div className="mt-24 mb-20">
+          <div className="flex items-center gap-4 mb-12">
+            <div className="p-2 bg-cyan-500/10 rounded-lg text-cyan-400"><Mail size={24} /></div>
+            <h2 className="text-3xl font-bold font-space">Get In Touch</h2>
+            <div className="h-px bg-white/10 flex-1 ml-4" />
+          </div>
+          <ContactForm variant="modern" />
+        </div>
 
         {/* Built with Vite Badge */}
         <div className="mt-12 text-sm text-gray-400 flex items-center gap-2 justify-center">
