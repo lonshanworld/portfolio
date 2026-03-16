@@ -45,9 +45,12 @@ const ModernView: React.FC = () => {
   };
 
   // Filter Projects
-  const webProjects = PROJECTS.filter(p => p.category === 'web' || p.category === 'iot');
-  const mobileProjects = PROJECTS.filter(p => p.category === 'mobile' || p.category === 'cross-platform');
-  const gameProjects = PROJECTS.filter(p => p.category === 'game' || p.category === 'html5');
+  const hasAnyCategory = (project: typeof PROJECTS[0], categories: string[]) =>
+    project.categories.some(category => categories.includes(category));
+
+  const webProjects = PROJECTS.filter(p => hasAnyCategory(p, ['web', 'iot']));
+  const mobileProjects = PROJECTS.filter(p => hasAnyCategory(p, ['mobile', 'cross-platform']));
+  const gameProjects = PROJECTS.filter(p => hasAnyCategory(p, ['game', 'html5']));
 
   const SocialRow = ({ icon: Icon, label, value, link, fieldId }: any) => (
     <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5 group/item">
@@ -74,11 +77,16 @@ const ModernView: React.FC = () => {
 
   // (No modal preview state — inline previews are used and lazy-loaded)
 
-  const ProjectCard: React.FC<{ project: typeof PROJECTS[0]; index?: number }> = ({ project, index = 0 }) => (
+  const ProjectCard: React.FC<{ project: typeof PROJECTS[0]; index?: number }> = ({ project, index = 0 }) => {
+    const isMobile = hasAnyCategory(project, ['mobile', 'cross-platform']);
+    const isGame = hasAnyCategory(project, ['game', 'html5']);
+    const isPreviewable = hasAnyCategory(project, ['web', 'iot', 'game', 'html5']);
+
+    return (
     <div className="group flex flex-col bg-[#0f0f0f] border border-white/10 rounded-2xl p-6 hover:border-cyan-500/30 transition-all hover:bg-white/[0.02] h-full">
       <div className="flex justify-between items-start mb-6">
-        <div className={`p-2 rounded-lg ${project.category === 'mobile' ? 'bg-purple-500/10 text-purple-400' : project.category === 'game' ? 'bg-amber-500/10 text-amber-400' : 'bg-cyan-500/10 text-cyan-400'}`}>
-            {project.category === 'mobile' ? <Smartphone size={24} /> : project.category === 'game' ? <Activity size={24} /> : <Globe size={24} />}
+        <div className={`p-2 rounded-lg ${isMobile ? 'bg-purple-500/10 text-purple-400' : isGame ? 'bg-amber-500/10 text-amber-400' : 'bg-cyan-500/10 text-cyan-400'}`}>
+            {isMobile ? <Smartphone size={24} /> : isGame ? <Activity size={24} /> : <Globe size={24} />}
         </div>
         <ArrowUpRight size={20} className="text-gray-600 group-hover:text-white transition-colors" />
       </div>
@@ -98,7 +106,7 @@ const ModernView: React.FC = () => {
         >
           Open
         </button>
-        {(project.category === 'web' || project.category === 'iot' || project.category === 'game') && (
+        {isPreviewable && (
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -114,8 +122,8 @@ const ModernView: React.FC = () => {
       </div>
 
       {/* Inline lazy preview for web/iot/game projects (auto-open but lazy-loaded) */}
-      {(project.category === 'web' || project.category === 'iot' || project.category === 'game') && (
-        project.category === 'game' ? (
+      {isPreviewable && (
+        isGame ? (
           <GamePreview url={project.link} index={index} />
         ) : (
           <SitePreview url={project.link} index={index} />
@@ -123,6 +131,7 @@ const ModernView: React.FC = () => {
       )}
     </div>
   );
+  };
 
   return (
     <div className="min-h-screen bg-[#050505] text-gray-200 font-sans selection:bg-cyan-500 selection:text-black pb-20 pt-24">
@@ -165,12 +174,19 @@ const ModernView: React.FC = () => {
 
              <div className="space-y-4">
                <h3 className="text-sm font-bold uppercase tracking-widest text-gray-500">Full Tech Stack</h3>
-               <div className="flex flex-wrap gap-2">
-                  {SKILLS.flatMap(s => s.items).map((skill, i) => (
-                    <span key={i} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm font-mono hover:border-cyan-500/50 hover:text-cyan-400 hover:bg-cyan-500/10 transition-all cursor-default">
-                      {skill}
-                    </span>
-                  ))}
+               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                 {SKILLS.map(group => (
+                   <div key={group.category}>
+                     <div className="text-xs font-bold uppercase text-gray-500 mb-2">{group.category}</div>
+                     <div className="flex flex-wrap gap-2">
+                       {group.items.map((skill) => (
+                         <span key={skill} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm font-mono hover:border-cyan-500/50 hover:text-cyan-400 hover:bg-cyan-500/10 transition-all cursor-default">
+                           {skill}
+                         </span>
+                       ))}
+                     </div>
+                   </div>
+                 ))}
                </div>
              </div>
           </div>
@@ -190,7 +206,7 @@ const ModernView: React.FC = () => {
                   <SocialRow icon={Phone} label="Phone" value={PERSONAL_INFO.phone} fieldId="phone" />
                   <SocialRow icon={Github} label="GitHub" value="github.com/lonshanworld" link={PERSONAL_INFO.github} fieldId="github" />
                   <SocialRow icon={Linkedin} label="LinkedIn" value="linkedin.com/in/lon-shan" link={PERSONAL_INFO.linkedin} fieldId="linkedin" />
-                  <SocialRow icon={FileText} label="JobsDB" value="th.jobsdb.com/profile..." link={PERSONAL_INFO.jobsdb} fieldId="jobsdb" />
+                  <SocialRow icon={FileText} label="Website" value="lonshan.com" link={PERSONAL_INFO.jobsdb} fieldId="website" />
                   {/* Download CV (Google Drive) */}
                   <button
                     onClick={() => {

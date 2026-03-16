@@ -1,11 +1,12 @@
+export type ProjectCategory = 'mobile' | 'web' | 'cross-platform' | 'iot' | 'game' | 'html5';
+
 export interface Project {
   id: string;
   title: string;
   description: string;
   tech: string[];
   link: string;
-  category: 'mobile' | 'web' | 'cross-platform' | 'iot';
-  year: string;
+  categories: ProjectCategory[];
 }
 
 export interface Skill {

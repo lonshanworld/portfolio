@@ -24,9 +24,12 @@ const RetroView: React.FC = () => {
     setLoading(false);
   };
 
-  const webProjects = PROJECTS.filter(p => p.category === 'web' || p.category === 'iot');
-  const mobileProjects = PROJECTS.filter(p => p.category === 'mobile' || p.category === 'cross-platform');
-  const gameProjects = PROJECTS.filter(p => p.category === 'game' || p.category === 'html5');
+  const hasAnyCategory = (project: typeof PROJECTS[0], categories: string[]) =>
+    project.categories.some(category => categories.includes(category));
+
+  const webProjects = PROJECTS.filter(p => hasAnyCategory(p, ['web', 'iot']));
+  const mobileProjects = PROJECTS.filter(p => hasAnyCategory(p, ['mobile', 'cross-platform']));
+  const gameProjects = PROJECTS.filter(p => hasAnyCategory(p, ['game', 'html5']));
 
   const ProjectList = ({ projects }: { projects: typeof PROJECTS }) => (
     <div className="space-y-8 mb-8">
@@ -35,7 +38,7 @@ const RetroView: React.FC = () => {
           <legend className="px-2 font-bold text-lg border-2 border-black bg-white shadow-[2px_2px_0px_#000]">{p.title}</legend>
 
           <div className="flex flex-col gap-3">
-            <div className="font-mono text-sm bg-gray-200 border border-gray-400 p-1 inline-block self-start">TYPE: {p.category.toUpperCase()}</div>
+            <div className="font-mono text-sm bg-gray-200 border border-gray-400 p-1 inline-block self-start">TYPE: {p.categories.join(' / ').toUpperCase()}</div>
 
             <p className="text-base font-serif leading-relaxed">{p.description}</p>
 
@@ -46,7 +49,7 @@ const RetroView: React.FC = () => {
             </div>
 
             {/* Inline preview for website / IoT projects */}
-            {(p.category === 'web' || p.category === 'iot') && (
+            {hasAnyCategory(p, ['web', 'iot']) && (
               <div className="mt-4 flex justify-center">
                 <SitePreview url={p.link} index={i} />
               </div>
@@ -154,7 +157,7 @@ const RetroView: React.FC = () => {
                     <a href={PERSONAL_INFO.github} target="_blank" rel="noreferrer" className="retro-link break-all">{PERSONAL_INFO.github}</a>
                   </li>
                   <li>
-                    <b>JobsDB:</b><br/>
+                    <b>Website:</b><br/>
                     <a href={PERSONAL_INFO.jobsdb} target="_blank" rel="noreferrer" className="retro-link break-all">{PERSONAL_INFO.jobsdb}</a>
                   </li>
                 </ul>
@@ -203,7 +206,7 @@ const RetroView: React.FC = () => {
                         <fieldset key={p.id} className="border-2 border-black p-4 bg-[#f0f0f0] shadow-[4px_4px_0px_rgba(0,0,0,0.5)]">
                           <legend className="px-2 font-bold text-lg border-2 border-black bg-white shadow-[2px_2px_0px_#000]">{p.title}</legend>
                           <div className="flex flex-col gap-3">
-                            <div className="font-mono text-sm bg-gray-200 border border-gray-400 p-1 inline-block self-start">TYPE: {p.category.toUpperCase()}</div>
+                            <div className="font-mono text-sm bg-gray-200 border border-gray-400 p-1 inline-block self-start">TYPE: {p.categories.join(' / ').toUpperCase()}</div>
                             <p className="text-base font-serif leading-relaxed">{p.description}</p>
                             <div><strong>Stack:</strong> {p.tech.join(", ")}</div>
                             <div className="mt-2 text-center">
