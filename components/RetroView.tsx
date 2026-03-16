@@ -132,15 +132,15 @@ const RetroView: React.FC = () => {
                 <p><b>Loc:</b><br/>Bangkok, TH</p>
               </div>
               <div className="mt-3">
-                <button
-                  onClick={() => {
-                    const url = 'https://drive.google.com/uc?export=download&id=1MinnW-bPAA3ww4S_kKJvFz3gUeFNYDX9';
-                    window.open(url, '_blank', 'noopener,noreferrer');
-                  }}
-                  className="inline-block mt-2 px-4 py-2 bg-green-700 text-white font-bold rounded hover:bg-green-600"
-                >
-                  Download CV
-                </button>
+                  <button
+                    onClick={() => {
+                      const url = 'https://drive.google.com/uc?export=download&id=19ddx2DK8rp9RKOKGxmU2ny_Z-IYuppCF';
+                      window.open(url, '_blank', 'noopener,noreferrer');
+                    }}
+                    className="inline-block mt-2 px-4 py-2 bg-green-700 text-white font-bold rounded hover:bg-green-600"
+                  >
+                    Download CV
+                  </button>
               </div>
             </div>
             
